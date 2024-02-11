@@ -1,19 +1,15 @@
 package com.ironmanjay.grainmall.member.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.ironmanjay.grainmall.member.entity.MemberEntity;
-import com.ironmanjay.grainmall.member.service.MemberService;
 import com.ironmanjay.grainmall.common.utils.PageUtils;
 import com.ironmanjay.grainmall.common.utils.R;
+import com.ironmanjay.grainmall.member.entity.MemberEntity;
+import com.ironmanjay.grainmall.member.feign.CouponFeignService;
+import com.ironmanjay.grainmall.member.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.Map;
 
 
 
@@ -27,8 +23,23 @@ import com.ironmanjay.grainmall.common.utils.R;
 @RestController
 @RequestMapping("member/member")
 public class MemberController {
+
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    CouponFeignService couponFeignService;
+
+    /**
+     * 优惠券列表
+     */
+    @RequestMapping("/coupons")
+    public R test(){
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setNickname("张三");
+        R membercoupons = couponFeignService.membercoupons();
+        return R.ok().put("member", memberEntity).put("coupons", membercoupons.get("coupons"));
+    }
 
     /**
      * 列表
